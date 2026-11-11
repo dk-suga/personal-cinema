@@ -8,3 +8,5 @@ export class SyncModel{
  resolve(key,useLocal){const p=this.pending.get(key);if(useLocal&&p)p.baseRev=this.remote.get(key)?.rev||0;else this.pending.delete(key);this.conflicts.delete(key)}
  journal(){return {remote:[...this.remote],pending:[...this.pending],conflicts:[...this.conflicts]}}
 }
+
+export const overlaySignature=docs=>canonical([...docs].sort(([a],[b])=>a.localeCompare(b)));

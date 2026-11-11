@@ -7,3 +7,13 @@ html{min-height:100%;-webkit-text-size-adjust:100%;scroll-padding-top:24px}body{
 @media(display-mode:standalone){header{padding-top:calc(14px + env(safe-area-inset-top))}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 .collection-field label[hidden]{display:none!important}
+
+/* Keep only the form body scrollable while the keyboard changes the visual viewport. */
+@media(max-width:650px){
+ .modal[open]{position:fixed;inset:auto;top:var(--dialog-top,0px);left:var(--dialog-left,0px);bottom:auto;right:auto;margin:0;width:var(--dialog-width,100vw);max-width:100vw;height:var(--dialog-height,100dvh);max-height:var(--dialog-height,100dvh);min-height:0;display:flex;flex-direction:column;overflow:hidden;box-sizing:border-box;transform:none;border-radius:0}
+ .modal .modalbar{position:relative;top:auto;flex:0 0 auto;padding-top:max(8px,env(safe-area-inset-top));min-height:60px}
+ .modal .modalbody{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;padding-bottom:calc(28px + env(safe-area-inset-bottom));scroll-padding-block:16px 28px}
+ .modal .formgrid input,.modal .formgrid textarea,.modal .direction-search input{font-size:16px!important}
+ .detail-grid>div:first-child>.poster{width:min(230px,100%);margin-left:auto;margin-right:auto}
+ html.cinema-dialog-open{overscroll-behavior:none}
+}

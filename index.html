@@ -287,7 +287,7 @@ $('footer').insertAdjacentHTML('beforeend','<button class="btn small" id="iphone
 $('#iphone-install').onclick=iphoneInstall;
 if('serviceWorker' in navigator&&window.top===window){window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{})})}
 // Follow the visual viewport while the iPhone keyboard is open.
-if(window.visualViewport){const update=()=>{document.documentElement.style.setProperty('--visual-height',visualViewport.height+'px')};visualViewport.addEventListener('resize',update);update()}
+
 
 
 let cinemaLocalWrites=Promise.resolve(),cinemaApplying=false;
@@ -309,10 +309,16 @@ saveCard=async function(event){const form=event.target;if(form.checkValidity())w
 
 window.cinemaBridge.ready=(async()=>{try{const cached=await window.cinemaStorage.get('state');if(cached?.records)db=cached;normalizeSessions();render();save()}catch(err){$('#cloud-error').textContent='Не удалось открыть хранилище устройства. Разреши сохранение данных для этого сайта.';throw err}})();
 
+
+let lastGoalRenderKey='';
+function goalRenderKey(){const y=year==='all'?String(CURRENT_YEAR):year,g=db.goals[y]||{films:10,dramas:10};return JSON.stringify([y,g.films,g.dramas,...[['Film','Cartoon'],['Kdrama']].map(types=>db.records.filter(r=>types.includes(r.type)).reduce((sum,r)=>sum+viewsOf(r).filter(v=>v.status==='Done'&&v.end?.startsWith(y+'-')).length,0))])}
+const renderGoalsBeforeStable=renderGoals;
+renderGoals=function(){const key=goalRenderKey(),target=$('#goals');if(key===lastGoalRenderKey&&target.childElementCount)return;renderGoalsBeforeStable();lastGoalRenderKey=key};
+
 const initialToday=dayKey();month=Number(initialToday.slice(5,7))-1;calYear=Number(initialToday.slice(0,4));
 
 async function portableBackup(source,loadImage){const copy=structuredClone(source),images=new Map();const pack=async(owner,key)=>{const value=owner[key];if(typeof value!=='string'||!/^posters\/[a-f0-9]{24}\.(jpg|png)$/.test(value))return;if(!images.has(value))images.set(value,loadImage(value));owner[key]=await images.get(value)};for(const r of [...copy.records,...(copy.importDrafts||[])]){await pack(r,'image');for(const session of r.sessions||[])await pack(session,'poster')}return {version:2,...copy}}
 $('#export').onclick=async()=>{const button=$('#export');button.disabled=true;try{const data=await portableBackup(db,async path=>{const response=await fetch(path);if(!response.ok)throw Error('poster');const blob=await response.blob();if(!blob.type.startsWith('image/'))throw Error('poster');return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(blob)})});const blob=new Blob([JSON.stringify(data)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='personal-cinema-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Резервная копия с постерами готова')}catch{toast('Не удалось включить постеры. Подключись к интернету и повтори экспорт.')}finally{button.disabled=false}};
 
 if(!db.records.some(r=>'imported'in r))db.records.forEach(r=>r.imported=true);render();
-</script><script type="module" src="cloud-sync.js" onerror="document.getElementById('cloud-error').textContent='Не удалось загрузить подключение к Firebase. Проверь интернет и обнови страницу.'"></script></body></html>
+</script><script type="module" src="cloud-sync.js" onerror="document.getElementById('cloud-error').textContent='Не удалось загрузить подключение к Firebase. Проверь интернет и обнови страницу.'"></script><script src="mobile-fixes.js"></script></body></html>
