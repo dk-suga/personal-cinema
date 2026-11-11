@@ -1,0 +1,9 @@
+const CACHE='personal-cinema-iphone-v2';
+const ASSETS=["./","index.html","iphone.css","manifest.webmanifest","icons/clapper-180.png","icons/clapper-192.png","icons/clapper-512.png"];
+const own=url=>url.origin===self.location.origin&&url.pathname.startsWith(new URL(self.registration.scope).pathname);
+const validShell=async response=>response.ok&&!response.redirected&&(await response.clone().text()).includes('name="application-name" content="Личный сеанс"');
+self.addEventListener('install',event=>event.waitUntil((async()=>{const cache=await caches.open(CACHE);await Promise.all(ASSETS.map(async path=>{try{const response=await fetch(new Request(path,{cache:'reload'}));if(response.ok&&!response.redirected&&(!['./','index.html'].includes(path)||await validShell(response)))await cache.put(path,response)}catch{}}))})()));
+self.addEventListener('activate',event=>event.waitUntil((async()=>{for(const name of await caches.keys())if(name.startsWith('personal-cinema-iphone-')&&name!==CACHE)await caches.delete(name);await self.clients.claim()})()));
+self.addEventListener('fetch',event=>{const request=event.request,url=new URL(request.url);if(request.method!=='GET'||!own(url))return;
+if(request.mode==='navigate'){event.respondWith((async()=>{try{const response=await fetch(request);if(await validShell(response))(await caches.open(CACHE)).put('index.html',response.clone());return response}catch{const cached=await caches.match('index.html');return cached||new Response('Открой «Личный сеанс» с интернетом для первого запуска.',{status:503,headers:{'Content-Type':'text/plain;charset=utf-8'}})}})());return}
+if(/\/(posters|icons)\//.test(url.pathname)||url.pathname.endsWith('/iphone.css'))event.respondWith((async()=>{const cached=await caches.match(request);if(cached)return cached;const response=await fetch(request);if(response.ok&&!response.redirected)(await caches.open(CACHE)).put(request,response.clone());return response})())});
