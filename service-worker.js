@@ -1,6 +1,6 @@
-const CACHE='personal-cinema-cloud-v6';
+const CACHE='personal-cinema-cloud-v7';
 const ASSETS=["./", "index.html", "iphone.css","mobile-fixes.js","recovery.js", "manifest.webmanifest", "cinema-storage.js", "cloud-sync.css", "cloud-sync.js", "sync-model.mjs", "firebase-config.js", "icons/clapper-180.png", "icons/clapper-192.png", "icons/clapper-512.png", "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js", "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js", "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js"];
-const RELEASE='20261112b';
+const RELEASE='20261112c';
 const own=url=>url.origin===self.location.origin&&url.pathname.startsWith(new URL(self.registration.scope).pathname);
 const validShell=async response=>response.ok&&!response.redirected&&(await response.clone().text()).includes('name="application-name" content="Личный сеанс"');
 self.addEventListener('install',event=>event.waitUntil((async()=>{const cache=await caches.open(CACHE);await Promise.all(ASSETS.map(async original=>{const path=/\.(js|css|mjs)$/.test(original)&&!original.startsWith('https:')?original+'?v='+RELEASE:original;try{const response=await fetch(new Request(path,{cache:'reload'}));if(response.ok&&!response.redirected&&(!['./','index.html'].includes(path)||await validShell(response)))await cache.put(path,response)}catch{}}))})()));
