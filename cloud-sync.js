@@ -2,7 +2,7 @@ import {initializeApp} from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-
 import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut,setPersistence,browserLocalPersistence} from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js';
 import {getFirestore,collection,doc,getDoc,onSnapshot,runTransaction,serverTimestamp} from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js';
 import {firebaseConfig,ownerUid} from './firebase-config.js';
-import {canonical,SyncModel,overlaySignature} from './sync-model.mjs';
+import {canonical,SyncModel,overlaySignature} from './sync-model.mjs?v=20261112b';
 const bridge=window.cinemaBridge,store=window.cinemaStorage,gate=document.getElementById('cloud-gate'),error=document.getElementById('cloud-error'),login=document.getElementById('cloud-login');
 const sdk=initializeApp(firebaseConfig),auth=getAuth(sdk),firestore=getFirestore(sdk),journalKey='cloud:'+firebaseConfig.projectId+':'+ownerUid;
 let model,device,user,stops=[],ready=false,initialized=false,initializing=false,flushing=false,writingKey=null,generation=0,processing=Promise.resolve(),uploadConsent=false;
