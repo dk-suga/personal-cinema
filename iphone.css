@@ -17,3 +17,5 @@ html{min-height:100%;-webkit-text-size-adjust:100%;scroll-padding-top:24px}body{
  .detail-grid>div:first-child>.poster{width:min(230px,100%);margin-left:auto;margin-right:auto}
  html.cinema-dialog-open{overscroll-behavior:none}
 }
+
+@media(max-width:650px){header{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;padding-bottom:20px}.logo{font-size:23px;min-width:0}.logo-icon{width:42px;height:42px;flex-shrink:0}.header-right{display:grid;grid-template-columns:minmax(100px,.8fr) minmax(0,1.2fr);width:100%;margin:0;gap:10px}.header-right .select{min-width:0;width:100%}.header-right .btn{width:100%;font-size:13px;white-space:nowrap}.header-right>div{min-width:0}}

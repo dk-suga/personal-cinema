@@ -1,4 +1,4 @@
-const CACHE='personal-cinema-cloud-v3';
+const CACHE='personal-cinema-cloud-v4';
 const ASSETS=["./", "index.html", "iphone.css","mobile-fixes.js", "manifest.webmanifest", "cinema-storage.js", "cloud-sync.css", "cloud-sync.js", "sync-model.mjs", "firebase-config.js", "icons/clapper-180.png", "icons/clapper-192.png", "icons/clapper-512.png", "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js", "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js", "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js"];
 const own=url=>url.origin===self.location.origin&&url.pathname.startsWith(new URL(self.registration.scope).pathname);
 const validShell=async response=>response.ok&&!response.redirected&&(await response.clone().text()).includes('name="application-name" content="Личный сеанс"');
